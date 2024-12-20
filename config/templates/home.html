@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load news_tags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block main %}
+<div class="card-container">
+    {% for course in courses %}
+    <div class="card" style="width: 350px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; padding: 10px;">
+        <img src="{{ course.photo.url }}" width="100%" height="200" alt="Fissure in Sandstone"/>
+        <div class="card-body">
+            <h5 class="card-title">{{ course.name }}</h5>
+            <p class="card-text">Narxi: 1 oyga {{ course.price }}</p>
+            <a href=" {% url 'about_lessons' course.id %}" class="btn btn-primary" data-mdb-ripple-init>Button</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock main %}

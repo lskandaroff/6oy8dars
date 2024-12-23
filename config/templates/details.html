@@ -5,11 +5,12 @@
 {% block main %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
   <div class="col">
+    {% for lesson in lessons %}
     <div class="card h-100">
       <div class="card-body">
-        <h5 class="card-title">{{ lessons.name }}</h5>
+        <h5 class="card-title">{{ lesson.name }}</h5>
         <p class="card-text">
-          {{ lessons.description}}
+          {{ lesson.description}}
         </p>
       </div>
       <div class="card-footer">
@@ -17,5 +18,6 @@
       </div>
     </div>
   </div>
+      {% endfor %}
 </div>
 {% endblock main %}

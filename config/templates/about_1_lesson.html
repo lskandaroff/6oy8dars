@@ -5,14 +5,20 @@
 {% block main %}
 
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-8 g-10">
+      <div class="d-flex flex-row-reverse">
+        <a href="{% url 'delete_lesson' lesson.id %}"><i class="fas fa-trash"></i></a>
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+       <a href="{% url 'update_lesson' lesson.id %}"><i class="fas fa-pen"></i></a>
+      </div>
+
   <div class="col">
-    {% for lesson in lessons %}
     <div class="card h-100">
       <div class="card-body">
-        <a href="{% url 'about_1_lesson' lesson.id %}">
         <h5 class="card-title">{{ lesson.name }}</h5>
-          </a>
         <p class="card-text">
           {{ lesson.description}}
         </p>
@@ -22,6 +28,5 @@
       </div>
     </div>
   </div>
-      {% endfor %}
 </div>
 {% endblock main %}

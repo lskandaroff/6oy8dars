@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<form method="post">
+    {% csrf_token %}
+    <h2>{{ lesson.name }}</h2>
+    <p>Maqolani o'chirmoqchimisiz?</p>
+    <button type="submit">OK</button>
+    <a href="{% url 'about_1_lesson' lesson.pk %}">Ortga</a>
+
+
+</form>
+{% endblock main %}

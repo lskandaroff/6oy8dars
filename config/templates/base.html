@@ -17,7 +17,15 @@
 
 {% include 'components/_navbar.html' %}
 
-<main class="mb-5 mt-5">
+<main class="mb-5 mt-5" style="padding: 0 20px;">
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
   {% block main %}
   {% endblock main %}
 </main>

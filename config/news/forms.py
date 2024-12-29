@@ -11,3 +11,13 @@ class CourseForm(forms.Form):
     price = forms.IntegerField(widget=forms.NumberInput())
     photo = forms.ImageField(widget=forms.FileInput())
 
+
+class RegisterForm(forms.Form):
+    username = forms.CharField(max_length=50, widget=forms.TextInput())
+    email = forms.EmailField(widget=forms.EmailInput())
+    password = forms.CharField(min_length=8, widget=forms.PasswordInput())
+    password_repeat = forms.CharField(min_length=8, widget=forms.PasswordInput())
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=50, widget=forms.TextInput())
+    password = forms.CharField(min_length=8, widget=forms.PasswordInput())

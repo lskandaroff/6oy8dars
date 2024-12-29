@@ -1,6 +1,8 @@
+from django.contrib.auth import authenticate, login, logout
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from .forms import LessonForm, CourseForm
+from .forms import LessonForm, CourseForm, RegisterForm, LoginForm
+from django.contrib.auth.models import User
 
 from django.contrib import messages
 from .models import Course, Lesson
@@ -104,4 +106,82 @@ def delete_lesson(request, lesson_id):
         'lesson': lesson
     }
     return render(request, 'confirm_delete.html', context)
+
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(data=request.POST)
+        if form.is_valid():
+            password = form.cleaned_data.get('password')
+            password_repeat = form.cleaned_data.get('password_repeat')
+            if password == password_repeat:
+                user = User.objects.create_user(
+                    form.cleaned_data.get('username'),
+                    form.cleaned_data.get('email'),
+                    password
+                )
+                messages.success(request, 'Royxatdan otildi')
+                return redirect('login')
+
+    context = {
+        'form': RegisterForm()
+    }
+
+    return render(request, 'auth/register.html', context)
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            messages.success(request, 'Xush kelibsiz')
+            login(request, user)
+            return redirect('home')
+    context = {
+        'form': LoginForm()
+    }
+
+    return render(request, 'auth/login.html', context)
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,11 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, get_object_or_404, get_list_or_404, redirect
-from .forms import LessonForm, CourseForm, RegisterForm, LoginForm
+from .forms import LessonForm, CourseForm, RegisterForm, LoginForm, CommentForm
 from django.contrib.auth.models import User
 
 from django.contrib import messages
-from .models import Course, Lesson
+from .models import Course, Lesson, Comment
+
 
 def home(request):
  courses = Course.objects.all()
@@ -21,7 +22,9 @@ def about_1_lesson(request, lesson_id):
     lesson = get_object_or_404(Lesson, id=lesson_id)
 
     context = {
-        'lesson': lesson
+        'lesson': lesson,
+        'form': CommentForm(),
+        'comments': Comment.objects.filter(post_id=lesson_id)
     }
 
     return render(request, 'about_1_lesson.html', context)
@@ -123,9 +126,11 @@ def register(request):
                 )
                 messages.success(request, 'Royxatdan otildi')
                 return redirect('login')
+    else:
+        form = RegisterForm()
 
     context = {
-        'form': RegisterForm()
+        'form': form
     }
 
     return render(request, 'auth/register.html', context)
@@ -149,6 +154,34 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    return redirect('login')
+
+def comment_save(request, lesson_id):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = CommentForm(data=request.POST)
+            if form.is_valid():
+                lesson = get_object_or_404(Lesson, pk=lesson_id)
+                Comment.objects.create(
+                    text=form.cleaned_data.get('text'),
+                    author=request.user,
+                    post=lesson
+                )
+                messages.success(request, 'comment qoshildi')
+            return redirect('about_1_lesson', lesson_id=lesson_id)
+    messages.error(request, 'avval login qiling')
+    return redirect('login')
+
+def comment_delete(request, comment_id):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(Comment, pk=comment_id)
+        if request.user == comment.author or request.user.is_superuser:
+            post_id = comment.post.pk
+            comment.delete()
+            messages.success(request, 'comment ochirildi!!!')
+            return redirect('about_1_lesson', post_id)
+
+    messages.error(request, 'avval login qiling')
     return redirect('login')
 
 
